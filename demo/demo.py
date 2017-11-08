@@ -8,6 +8,9 @@ from tflearn.layers.core import input_data, dropout, fully_connected
 from tflearn.layers.estimator import regression
 from statistics import mean, median
 from collections import Counter
+import matplotlib
+matplotlib.use('TKAgg')
+import matplotlib.pyplot as plt
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
@@ -60,7 +63,7 @@ def initial_pop(): #keeps games that score above score_req
             for data in game_memory:
                 if data[1] == 1:
                     output = [0,1]
-                elif data[1] == 0:
+                elif data[1] == 0:  
                     output = [1,0]
                 training_data.append([data[0], output])
                 
@@ -71,8 +74,22 @@ def initial_pop(): #keeps games that score above score_req
     np.save('saved.npy', training_data_save)
     
     print 'Average accepted score: ', mean(accepted_scores)
-    print 'Median accepted score: ', median(accepted_scores) 
-    #print '\n', Counter(accepted_scores) 
+    print 'Median accepted score: ', median(accepted_scores)
+    print 'Mine score : ', min(accepted_scores)
+    print 'Max score : ', max(accepted_scores)
+    #print '\n', Counter(accepted_scores)
+
+    counter = Counter([s for s in accepted_scores if s <= 80])
+    labels = counter.keys()
+    values = counter.values()
+    indexes = np.arange(len(labels))
+    width = 0.5
+
+    plt.bar(indexes, values, width)
+    plt.xticks(indexes + width * 0.5, labels)
+    plt.xlabel('Scores')
+    plt.ylabel('Frequency')
+    plt.show() 
     
     return training_data
     
@@ -172,7 +189,7 @@ def main():
         scores.append(score)
 
     print 'Average Score:', sum(scores)/len(scores)
-    print 'Left: ', float(choices.count(1))/len(choices),  '\nRight: ', float(choices.count(0))/len(choices)
+    print 'Left: {0:0.2f}   Right: {0:0.2f}'.format(float(choices.count(1))/len(choices), float(choices.count(0))/len(choices))
 
 if __name__ == "__main__": main()
 
