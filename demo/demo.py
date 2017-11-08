@@ -20,7 +20,7 @@ goal_steps = 500 # number of actions per game
 score_req = 50 # want this score at least
 initial_games = 30000 # number of games to run
 
-env = gym.make('CartPole-v0')
+env = gym.make('CartPole-v0').env
 env.reset()
 
 def first_game(): #runs random game
@@ -75,7 +75,7 @@ def initial_pop(): #keeps games that score above score_req
     
     print 'Average accepted score: ', mean(accepted_scores)
     print 'Median accepted score: ', median(accepted_scores)
-    print 'Mine score : ', min(accepted_scores)
+    print 'Min score : ', min(accepted_scores)
     print 'Max score : ', max(accepted_scores)
     #print '\n', Counter(accepted_scores)
 
@@ -186,10 +186,11 @@ def main():
             if done: 
                 break
 
+        print "Game: ", each_game+1, " Score: ", score
         scores.append(score)
 
     print 'Average Score:', sum(scores)/len(scores)
-    print 'Left: {0:0.2f}   Right: {0:0.2f}'.format(float(choices.count(1))/len(choices), float(choices.count(0))/len(choices))
+    print 'Left: {0:0.4f}   Right: {0:0.4f}'.format(float(choices.count(1))/len(choices), float(choices.count(0))/len(choices))
 
 if __name__ == "__main__": main()
 
